@@ -1,0 +1,63 @@
+// BaseNotificationClass
+
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+
+public class BaseNotificationClass : INotifyPropertyChanged
+{
+    public event PropertyChangedEventHandler PropertyChanged;
+
+    protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+}
+
+// Modify Player and GameSession Classes
+
+public class Player : BaseNotificationClass
+{
+    private string _name;
+    public string Name
+    {
+        get { return _name; }
+        set
+        {
+            if (_name != value)
+            {
+                _name = value;
+                OnPropertyChanged(nameof(Name));
+            }
+        }
+    }
+}
+
+public class GameSession : BaseNotificationClass
+{
+    public Player CurrentPlayer { get; } = new Player { Name = "DefaultName" }; 
+}
+
+// simplify Object Initialization
+public class GameSession : BaseNotificationClass
+{
+    public Player CurrentPlayer { get; } = new Player { Name = "DefaultName" };
+    //
+}
+
+// Make WorldFactory Class Static
+public static class WorldFactory
+{
+    public static World CreateWorld() 
+    {
+        // 
+    }
+}
+
+public class GameSession : BaseNotificationClass
+{
+    public void InitializeWorld()
+    {
+        CurrentWorld = WorldFactory.CreateWorld();
+    }
+}
+
